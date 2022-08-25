@@ -1,7 +1,13 @@
 Rails.application.routes.draw do
-  resources :bookmarks
-  # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
+  use_doorkeeper do
+    skip_controllers :authorizations, :applications, :authorized_applications
+  end
+  devise_for :users
 
-  # Defines the root path route ("/")
-  # root "articles#index"
+  root "bookmarks#index"
+  resources :bookmarks
+  namespace :api do
+    resources :users, only: %i[create]
+    resources :bookmarks, only: %i[index]
+  end
 end
